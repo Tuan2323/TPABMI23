@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
     <meta charset="utf-8"/>
-    <title>Modification prix</title>
+    <title>Modification d'un utilisateur</title>
     <link rel="stylesheet" href=styles.css>
 </head>
 
@@ -13,7 +13,7 @@
 //Créer la base de données
 include_once 'myparam.inc.php';
 //Connexion au serveur de la bdd
-$idcom = new mysqli(MYHOST, MYUSER, MYPASS, "tp23");
+$idcom = new mysqli(MYHOST, MYUSER, MYPASS, "monform");
 
 //Test si la connexion est valide
 if (!$idcom) {
@@ -21,18 +21,15 @@ if (!$idcom) {
     exit();
 } 
 
-    if(!empty($_POST['prix'])) {
-        $prod = $_POST['prod'];
-    echo '1';
-    echo $_POST['prod'];
-    $prix = $_POST['prix'];
-    echo $_POST['prix'];
-    echo $prod;
-   // echo $produit;
+if(!empty($_POST['nom'])) {
+
+    $identifiant = $_POST['identifiant'];
+    $nom = $idcom->escape_string($_POST['nom']);
+
     //Ecrire la requete pour modifier les données d'un utilisateur
-    $requete = "UPDATE Products SET
-    UnitPrice = $prix
-    WHERE ProductName = '$prod' ";
+    $requete = "UPDATE utilisateurs SET
+    nom = '$nom' 
+    WHERE id = '$identifiant'";
 
     //Envoyer la requete
     $result = $idcom->query($requete);
@@ -43,9 +40,6 @@ if (!$idcom) {
     } else {
         echo "Erreur " . $idcom->error;
     }
-
-  
-
 
     //Fermer la connexion au serveur
     $idcom->close();

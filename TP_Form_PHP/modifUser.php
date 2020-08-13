@@ -10,7 +10,7 @@
 <header></header>
 <h1>Saisissez l'identifiant d'un utilisateur</h1>
   <hr>
-  <form method = "post" action="modifPrix.php">
+  <form method = "post" action="modifUser.php">
    <fieldset>
        <legend>Modification des utilisateurs</legend>
        <label>Saisissez l'id de l'utilisateur</label>
@@ -42,7 +42,7 @@ if(!empty($_POST['identifiant'])){
     $coord = $result->fetch_row(); //fetch_row - Récupère une ligne de résultat sous forme de tableau indexé
 
     echo "<h1> Modification d'un utilisateur</h1>";
-    echo " <fieldset id=\"main\">";
+    echo "<fieldset id=\"main\">";
     echo " <legend>Modification du formulaire :</legend>";
     echo "<form action=\"traitementUpdate.php\" method=\"post\">";
     ?>
