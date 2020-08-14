@@ -8,11 +8,12 @@
 
 <body>
 <header></header>
-<h1> Les 4 fantastiques</h1>
+<h1> Les 4 fantastiques EZMIABAN </h1>
 <fieldset id="main">
-    <legend>Notre formulaire :</legend>
+    <legend> EZMIABAN : </legend>
+    <br>
     <form action="index.php" method="post">
-        <label>Nom de l'employé</label>
+        <label>Nom de l'employé :</label>
         <input type="text" name="nom" value=""><br><br>
         <label>Produit:</label>
         <input type="text" name="produit" value=""><br><br>
@@ -22,18 +23,20 @@
             <input type="radio" name="action" value="affiche">affiche
         </fieldset>
         <br>
-        <label>Lieu</label>
+        <label>Lieu :</label>
         <input type="text" name="lieu" value=""><br><br>
         <br>
 
-        <label>Commande :</label>
+        <label>Liste des commandes :</label>
         <br>
-        <label>Date de debut</label>
+        <br>
+        <label>Date de debut </label>
         <input type="date" name="dated"><br><br>
         <label>Date de fin</label>
         <input type="date" name="datef"><br><br>
 
         <input type="submit" name="valider" value=" Envoyer "> 
+        
         <input type="reset" value="Annuler">
     </form>
 </fieldset>
@@ -59,16 +62,24 @@ if(!empty($_POST['nom'])
          ){
         $nom = $idcom->escape_string($_POST['nom']);
      
-        $requete = "SELECT Employees.EmployeeID , Orders.EmployeeID, Orders.OrderID, Orders.CustomerID
+       /*  $requete = "SELECT Employees.EmployeeID , Orders.EmployeeID, Orders.OrderID, Orders.CustomerID
         FROM Employees
         INNER JOIN Orders  
         ON Employees.EmployeeID = Orders.EmployeeID
-        WHERE Employees.EmployeeID = $nom";
+        WHERE Employees.EmployeeID = $nom"; */
+
+        $requete = "SELECT orders.OrderID,employees.FirstName ,employees.LastName,customers.CompanyName 
+        FROM orders ,customers,employees 
+        WHERE orders.EmployeeID= employees.EmployeeID 
+        and orders.CustomerID=customers.CustomerID 
+       /* and employees.firstName='$prenom' */
+        and employees.lastName='$nom'";
         
+
         $result = $idcom->query($requete);
         while ($reponse = $result->fetch_array(MYSQLI_ASSOC)){
             echo "<br/>";
-            echo  $reponse ['EmployeeID']." ".$reponse ['OrderID'] ." ". $reponse ['CustomerID'] ;
+            echo "Nom de l'employé :" .$reponse ['LastName']." <label> Numero de commande : </label> ".$reponse ['OrderID'] ."  Client :". $reponse ['CompanyName'] ;
         }
          }
         
@@ -140,21 +151,31 @@ if ($_POST['action'] == "affiche"){
         $produit = $idcom->escape_string($_POST['produit']);
         $action = $idcom->escape_string($_POST['action']);
 
-        $requete1 = " SELECT Orders.CustomerID, Orders.OrderID
-        FROM Orders
-        INNER JOIN OrderDetails
-        ON Orders.OrderID = OrderDetails.OrderID
-        WHERE OrderDetails.ProductID = '$produit'";
+        $requete0 = "SELECT ProductID FROM Products WHERE ProductName = '$produit'";
+        $result0 = $idcom->query($requete0);
+        while ( $reponse0 = $result0->fetch_row() ) {
+            $requete1="SELECT Orders.CustomerID, Orders.OrderID, Customers.CompanyName
+            FROM Orders
+            INNER JOIN OrderDetails
+            ON Orders.OrderID = OrderDetails.OrderID
+            JOIN Customers
+            ON Orders.CustomerID = Customers.CustomerID
+            WHERE OrderDetails.ProductID = '$reponse0[0]' ORDER BY Customers.CompanyName ASC ";
+    
+    
+            $result1 = $idcom->query($requete1);
+          echo " <h1>$produit</h1> ";
 
-
-        $result1 = $idcom->query($requete1);
-      
-       while( $reponse1 = $result1->fetch_row()){
+           while( $reponse1 = $result1->fetch_row()){
+    
+           
+               echo "<br/>";
+                echo  " Nom societe : " .$reponse1 [2]." <br/> N° Commande : ".$reponse1 [1] ;
+                echo "<br/>";
+            }
+        }
 
        
-           echo "<br/>";
-            echo  $reponse1 [0]." ".$reponse1 [1] ;
-       }
          }
         }
        
@@ -169,11 +190,13 @@ if ($_POST['action'] == "affiche"){
        
         $lieu = $idcom->escape_string($_POST['lieu']);
   
-        $requete = "SELECT Orders.EmployeeID, Customers.CompanyName, Customers.ContactName
+        $requete = "SELECT Orders.EmployeeID, Customers.CompanyName, Customers.ContactName, Employees.LastName
         FROM Orders
         INNER JOIN Customers
         ON Orders.CustomerID = Customers.CustomerID
-        WHERE Orders.ShipCity = '$lieu' AND Orders.EmployeeID = '$nom' ORDER BY  Customers.CompanyName ASC";
+        JOIN Employees
+        ON Orders.EmployeeID = Employees.EmployeeID
+        WHERE Orders.ShipCity = '$lieu' AND Employees.LastName = '$nom' ORDER BY  Customers.CompanyName ASC";
 
 $result = $idcom->query($requete);
 while( $reponse1 = $result->fetch_row()){
@@ -243,6 +266,6 @@ while( $reponse1 = $result->fetch_row()){
 
 ?>
 
-<footer> Formulaire fait par les 4 EZMIABAN </footer>
+<footer> <br/>Formulaire fait par les 4 EZMIABAN </footer>
 </body>
 </html>
