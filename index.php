@@ -79,7 +79,8 @@ if(!empty($_POST['nom'])
         $result = $idcom->query($requete);
         while ($reponse = $result->fetch_array(MYSQLI_ASSOC)){
             echo "<br/>";
-            echo "Nom de l'employé :" .$reponse ['LastName']." <label> Numero de commande : </label> ".$reponse ['OrderID'] ."  Client :". $reponse ['CompanyName'] ;
+            echo "Nom de l'employé :" .$reponse ['LastName']." <br/><label> Numero de commande : </label> ".$reponse ['OrderID'] ."  <br/>Client :". $reponse ['CompanyName'] ;
+            echo "<br/>";
         }
          }
         
@@ -179,32 +180,39 @@ if ($_POST['action'] == "affiche"){
          }
         }
        
-        if(!empty($_POST['nom']) 
+        if(empty($_POST['nom']) 
          && empty($_POST['produit']) 
          && empty($_POST['action']) 
          && !empty($_POST['lieu'])
          && empty($_POST['dated']) 
          && empty($_POST['datef']) 
          ){
-        $nom = $idcom->escape_string($_POST['nom']);
+       // $nom = $idcom->escape_string($_POST['nom']);
        
         $lieu = $idcom->escape_string($_POST['lieu']);
   
-        $requete = "SELECT Orders.EmployeeID, Customers.CompanyName, Customers.ContactName, Employees.LastName
+       /* $requete = "SELECT Orders.EmployeeID, Customers.CompanyName, Customers.ContactName, Employees.LastName
         FROM Orders
         INNER JOIN Customers
         ON Orders.CustomerID = Customers.CustomerID
         JOIN Employees
         ON Orders.EmployeeID = Employees.EmployeeID
-        WHERE Orders.ShipCity = '$lieu' AND Employees.LastName = '$nom' ORDER BY  Customers.CompanyName ASC";
+        WHERE Orders.ShipCity = '$lieu' AND Employees.LastName = '$nom' ORDER BY  Customers.CompanyName ASC";*/
+       $requete=" SELECT orders.OrderID,employees.FirstName,employees.LastName,customers.CompanyName 
+       FROM orders ,customers,employees
+        WHERE orders.EmployeeID= employees.EmployeeID 
+        and orders.CustomerID=customers.CustomerID 
+        and orders.ShipCity='$lieu' order by customers.CompanyName ASC";
+
 
 $result = $idcom->query($requete);
 while( $reponse1 = $result->fetch_row()){
 
        
     echo "<br/>";
-     echo  $reponse1 [0]." ".$reponse1 [1]." ".$reponse1 [2] ;
-}
+     echo "Order ID " .$reponse1 [0]." <br/>Nom de l'employé : ".$reponse1 [1]." ".$reponse1 [2]."  <br/>Company : ".$reponse1 [3] ;
+     echo "<br/>";
+    }
          }
 
         if(empty($_POST['nom']) 
@@ -266,6 +274,6 @@ while( $reponse1 = $result->fetch_row()){
 
 ?>
 
-<footer> <br/>Formulaire fait par les 4 EZMIABAN </footer>
+<footer> <br/>Formulaire fait par les 4 EZMIABAN <br/></footer>
 </body>
 </html>

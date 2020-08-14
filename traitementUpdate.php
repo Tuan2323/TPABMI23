@@ -23,11 +23,10 @@ if (!$idcom) {
 
     if(!empty($_POST['prix'])) {
         $prod = $_POST['prod'];
-    echo '1';
-    echo $_POST['prod'];
+    
+    
     $prix = $_POST['prix'];
-    echo $_POST['prix'];
-    echo $prod;
+  
    // echo $produit;
     //Ecrire la requete pour modifier les données d'un utilisateur
     $requete = "UPDATE Products SET
@@ -39,7 +38,7 @@ if (!$idcom) {
 
     //Vérifier que la requete est bien éxécutée
     if ($result) {
-      echo "Les données ont bien été modifiées";
+      echo "Les données ont bien été modifiées <a href=\"index.php\"> Retour </a>";
     } else {
         echo "Erreur " . $idcom->error;
     }
